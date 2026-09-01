@@ -265,7 +265,7 @@ export default async function HomePage() {
                 this app.
               </p>
             </div>
-            <div className="grid gap-3 lg:grid-cols-3">
+            <div className="grid gap-3">
               <SurfaceLink icon={CheckCircle2} label="Pay URL" value={payUrl} />
               <SurfaceLink icon={KeyRound} label="Login URL" value={loginUrl} />
               {withdrawUrl ? (
