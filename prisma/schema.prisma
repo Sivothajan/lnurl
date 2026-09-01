@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model LightningPayRequest {
+  uuid               String    @id @db.Uuid
+  address            String
+  url                String?
+  coin               String    @default("BTC")
+  amount             BigInt
+  network            String    @default("LIGHTNING")
+  prefix             String?
+  payee_node         String?
+  payment_hash       String?
+  expires_at         DateTime? @db.Timestamptz(6)
+  tag                String?
+  comment            String?   @db.VarChar(255)
+  payer_data         Json?
+  payer_pubkey       String?   @db.VarChar(130)
+  nostr_pubkey       String?
+  deposit_status     Int?
+  deposit_data       Json?
+  deposit_checked_at DateTime? @db.Timestamptz(6)
+  is_paid            Boolean   @default(false)
+  paid_at            DateTime? @db.Timestamptz(6)
+  created_at         DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime  @updatedAt @db.Timestamptz(6)
+
+  @@index([is_paid])
+  @@index([created_at(sort: Desc)])
+  @@index([payment_hash])
+  @@map("lightning_pay_request_data")
+}
+
+model LightningWithdrawRequest {
+  k1                  String    @id @db.VarChar(64)
+  address             String
+  url                 String?
+  coin                String    @default("BTC")
+  amount              BigInt
+  network             String    @default("LIGHTNING")
+  prefix              String?
+  payee_node          String?
+  payment_hash        String?
+  expires_at          DateTime? @db.Timestamptz(6)
+  withdraw_id         String?   @db.VarChar(255)
+  payout_status       Int?
+  payout_submitted_at DateTime? @db.Timestamptz(6)
+  is_paid             Boolean   @default(false)
+  paid_at             DateTime? @db.Timestamptz(6)
+  created_at          DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime  @updatedAt @db.Timestamptz(6)
+
+  @@index([is_paid])
+  @@index([created_at(sort: Desc)])
+  @@index([payment_hash])
+  @@map("lightning_withdraw_request_data")
+}

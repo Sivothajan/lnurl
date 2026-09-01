@@ -1,0 +1,184 @@
+import { createEnv } from '@t3-oss/env-nextjs';
+import { z } from 'zod';
+
+interface PublicEnvConfig {
+  NEXT_PUBLIC_SITE_URL: string;
+
+  NEXT_PUBLIC_NOSTR_NIP_05?: string;
+  NEXT_PUBLIC_NOSTR_HEX_PUBLIC_KEY: string;
+  NEXT_PUBLIC_NOSTR_PUBLIC_KEY: string;
+
+  NEXT_PUBLIC_NOSTR_ENABLED: boolean;
+
+  NEXT_PUBLIC_LNURLP_IS_EMAIL_IDENTIFIER: boolean;
+  NEXT_PUBLIC_LNURLP_IS_COMMENTS_ALLOWED: boolean;
+  NEXT_PUBLIC_LNURLP_MIN_SENDABLE: number;
+  NEXT_PUBLIC_LNURLP_MAX_SENDABLE: number;
+  NEXT_PUBLIC_LNURLP_MIN_WITHDRAWABLE: number;
+  NEXT_PUBLIC_LNURLP_MAX_WITHDRAWABLE: number;
+  NEXT_PUBLIC_LNURLP_IS_WITHDRAW_ALLOWED: boolean;
+  NEXT_PUBLIC_LNURLP_WITHDRAW_DEFAULT_DESCRIPTION: string;
+  NEXT_PUBLIC_LNURLP_USERNAME: string;
+  NEXT_PUBLIC_LNURLP_LONG_DESCRIPTION: string;
+  NEXT_PUBLIC_LNURLP_IS_NAME_MANDATORY: boolean;
+  NEXT_PUBLIC_LNURLP_IS_EMAIL_MANDATORY: boolean;
+  NEXT_PUBLIC_LNURLP_IS_IDENTIFIER_MANDATORY: boolean;
+  NEXT_PUBLIC_LNURLP_AUTH_ALLOWED: boolean;
+  NEXT_PUBLIC_LNURLP_IS_LOGIN_ALLOWED: boolean;
+  NEXT_PUBLIC_LNURLP_ALLOWS_NOSTR: boolean;
+  NEXT_PUBLIC_LNURLP_IS_PUBKEY_MANDATORY: boolean;
+  NEXT_PUBLIC_LNURLP_COIN: string;
+  NEXT_PUBLIC_LNURLP_IS_MESSAGE_IN_SUCCESS_ACTION: boolean;
+  NEXT_PUBLIC_LNURLP_IS_DISPOSABLE_ADDRESS: boolean;
+  NEXT_PUBLIC_LNURLP_IS_ADDRESS_REQUEST_ALLOWED: boolean;
+  NEXT_PUBLIC_LNURLP_ADDRESS_REQUEST_DESCRIPTION: string;
+}
+
+const optionalString = z.string().optional();
+const stringWithDefault = (defaultValue: string) =>
+  z.string().optional().default(defaultValue);
+const booleanString = (defaultValue: boolean) =>
+  z.preprocess(
+    (value) =>
+      value === undefined
+        ? defaultValue
+        : String(value).toLowerCase() === 'true',
+    z.boolean()
+  );
+const positiveIntegerString = (defaultValue: number) =>
+  z.preprocess(
+    (value) => (value === undefined ? defaultValue : Number(value)),
+    z.number().int().safe().positive()
+  );
+
+const publicEnvConfig = createEnv({
+  client: {
+    NEXT_PUBLIC_SITE_URL: stringWithDefault('https://lnurlp.vercel.app'),
+
+    NEXT_PUBLIC_NOSTR_NIP_05: stringWithDefault('_'),
+    NEXT_PUBLIC_NOSTR_HEX_PUBLIC_KEY: stringWithDefault(
+      'd817475e51af63ffe299085a7b3e975f1a90fed8ea25451c0329edf6e9d95a9a'
+    ),
+    NEXT_PUBLIC_NOSTR_PUBLIC_KEY: stringWithDefault(
+      'npub1mqt5whj34a3llc5eppd8k05htudfplkcagj528qr98kld6wet2dq8hnm6p'
+    ),
+
+    NEXT_PUBLIC_NOSTR_ENABLED: booleanString(true),
+
+    NEXT_PUBLIC_LNURLP_IS_EMAIL_IDENTIFIER: booleanString(true),
+    NEXT_PUBLIC_LNURLP_IS_COMMENTS_ALLOWED: booleanString(true),
+    NEXT_PUBLIC_LNURLP_MIN_SENDABLE: positiveIntegerString(20_000_000),
+    NEXT_PUBLIC_LNURLP_MAX_SENDABLE: positiveIntegerString(20_000_000_000_000),
+    NEXT_PUBLIC_LNURLP_MIN_WITHDRAWABLE: positiveIntegerString(20_000_000),
+    NEXT_PUBLIC_LNURLP_MAX_WITHDRAWABLE:
+      positiveIntegerString(20_000_000_000_000),
+    NEXT_PUBLIC_LNURLP_IS_WITHDRAW_ALLOWED: booleanString(true),
+    NEXT_PUBLIC_LNURLP_WITHDRAW_DEFAULT_DESCRIPTION: stringWithDefault(
+      'Withdraw from lnurlp.vercel.app'
+    ),
+    NEXT_PUBLIC_LNURLP_USERNAME: stringWithDefault('username'),
+    NEXT_PUBLIC_LNURLP_LONG_DESCRIPTION: optionalString.default(''),
+    NEXT_PUBLIC_LNURLP_IS_NAME_MANDATORY: booleanString(true),
+    NEXT_PUBLIC_LNURLP_IS_EMAIL_MANDATORY: booleanString(true),
+    NEXT_PUBLIC_LNURLP_IS_IDENTIFIER_MANDATORY: booleanString(true),
+    NEXT_PUBLIC_LNURLP_AUTH_ALLOWED: booleanString(true),
+    NEXT_PUBLIC_LNURLP_IS_LOGIN_ALLOWED: booleanString(true),
+    NEXT_PUBLIC_LNURLP_ALLOWS_NOSTR: booleanString(true),
+    NEXT_PUBLIC_LNURLP_IS_PUBKEY_MANDATORY: booleanString(true),
+    NEXT_PUBLIC_LNURLP_COIN: stringWithDefault('BTC'),
+    NEXT_PUBLIC_LNURLP_IS_MESSAGE_IN_SUCCESS_ACTION: booleanString(true),
+    NEXT_PUBLIC_LNURLP_IS_DISPOSABLE_ADDRESS: booleanString(true),
+    NEXT_PUBLIC_LNURLP_IS_ADDRESS_REQUEST_ALLOWED: booleanString(true),
+    NEXT_PUBLIC_LNURLP_ADDRESS_REQUEST_DESCRIPTION: stringWithDefault(
+      'Share your Lightning address with lnurlp.vercel.app'
+    ),
+  },
+  runtimeEnv: {
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+    NEXT_PUBLIC_NOSTR_NIP_05: process.env.NEXT_PUBLIC_NOSTR_NIP_05,
+    NEXT_PUBLIC_NOSTR_HEX_PUBLIC_KEY:
+      process.env.NEXT_PUBLIC_NOSTR_HEX_PUBLIC_KEY,
+    NEXT_PUBLIC_NOSTR_PUBLIC_KEY: process.env.NEXT_PUBLIC_NOSTR_PUBLIC_KEY,
+    NEXT_PUBLIC_NOSTR_ENABLED: process.env.NEXT_PUBLIC_NOSTR_ENABLED,
+    NEXT_PUBLIC_LNURLP_IS_EMAIL_IDENTIFIER:
+      process.env.NEXT_PUBLIC_LNURLP_IS_EMAIL_IDENTIFIER,
+    NEXT_PUBLIC_LNURLP_IS_COMMENTS_ALLOWED:
+      process.env.NEXT_PUBLIC_LNURLP_IS_COMMENTS_ALLOWED,
+    NEXT_PUBLIC_LNURLP_MIN_SENDABLE:
+      process.env.NEXT_PUBLIC_LNURLP_MIN_SENDABLE,
+    NEXT_PUBLIC_LNURLP_MAX_SENDABLE:
+      process.env.NEXT_PUBLIC_LNURLP_MAX_SENDABLE,
+    NEXT_PUBLIC_LNURLP_MIN_WITHDRAWABLE:
+      process.env.NEXT_PUBLIC_LNURLP_MIN_WITHDRAWABLE,
+    NEXT_PUBLIC_LNURLP_MAX_WITHDRAWABLE:
+      process.env.NEXT_PUBLIC_LNURLP_MAX_WITHDRAWABLE,
+    NEXT_PUBLIC_LNURLP_IS_WITHDRAW_ALLOWED:
+      process.env.NEXT_PUBLIC_LNURLP_IS_WITHDRAW_ALLOWED,
+    NEXT_PUBLIC_LNURLP_WITHDRAW_DEFAULT_DESCRIPTION:
+      process.env.NEXT_PUBLIC_LNURLP_WITHDRAW_DEFAULT_DESCRIPTION,
+    NEXT_PUBLIC_LNURLP_USERNAME: process.env.NEXT_PUBLIC_LNURLP_USERNAME,
+    NEXT_PUBLIC_LNURLP_LONG_DESCRIPTION:
+      process.env.NEXT_PUBLIC_LNURLP_LONG_DESCRIPTION,
+    NEXT_PUBLIC_LNURLP_IS_NAME_MANDATORY:
+      process.env.NEXT_PUBLIC_LNURLP_IS_NAME_MANDATORY,
+    NEXT_PUBLIC_LNURLP_IS_EMAIL_MANDATORY:
+      process.env.NEXT_PUBLIC_LNURLP_IS_EMAIL_MANDATORY,
+    NEXT_PUBLIC_LNURLP_IS_IDENTIFIER_MANDATORY:
+      process.env.NEXT_PUBLIC_LNURLP_IS_IDENTIFIER_MANDATORY,
+    NEXT_PUBLIC_LNURLP_AUTH_ALLOWED:
+      process.env.NEXT_PUBLIC_LNURLP_AUTH_ALLOWED,
+    NEXT_PUBLIC_LNURLP_IS_LOGIN_ALLOWED:
+      process.env.NEXT_PUBLIC_LNURLP_IS_LOGIN_ALLOWED,
+    NEXT_PUBLIC_LNURLP_ALLOWS_NOSTR:
+      process.env.NEXT_PUBLIC_LNURLP_ALLOWS_NOSTR,
+    NEXT_PUBLIC_LNURLP_IS_PUBKEY_MANDATORY:
+      process.env.NEXT_PUBLIC_LNURLP_IS_PUBKEY_MANDATORY,
+    NEXT_PUBLIC_LNURLP_COIN: process.env.NEXT_PUBLIC_LNURLP_COIN,
+    NEXT_PUBLIC_LNURLP_IS_MESSAGE_IN_SUCCESS_ACTION:
+      process.env.NEXT_PUBLIC_LNURLP_IS_MESSAGE_IN_SUCCESS_ACTION,
+    NEXT_PUBLIC_LNURLP_IS_DISPOSABLE_ADDRESS:
+      process.env.NEXT_PUBLIC_LNURLP_IS_DISPOSABLE_ADDRESS,
+    NEXT_PUBLIC_LNURLP_IS_ADDRESS_REQUEST_ALLOWED:
+      process.env.NEXT_PUBLIC_LNURLP_IS_ADDRESS_REQUEST_ALLOWED,
+    NEXT_PUBLIC_LNURLP_ADDRESS_REQUEST_DESCRIPTION:
+      process.env.NEXT_PUBLIC_LNURLP_ADDRESS_REQUEST_DESCRIPTION,
+  },
+}) satisfies PublicEnvConfig;
+
+if (
+  !Number.isSafeInteger(publicEnvConfig.NEXT_PUBLIC_LNURLP_MIN_SENDABLE) ||
+  publicEnvConfig.NEXT_PUBLIC_LNURLP_MIN_SENDABLE < 1
+) {
+  throw new Error(
+    'NEXT_PUBLIC_LNURLP_MIN_SENDABLE must be a positive integer in millisatoshis.'
+  );
+}
+
+if (
+  publicEnvConfig.NEXT_PUBLIC_LNURLP_MAX_SENDABLE <
+  publicEnvConfig.NEXT_PUBLIC_LNURLP_MIN_SENDABLE
+) {
+  throw new Error(
+    'NEXT_PUBLIC_LNURLP_MAX_SENDABLE must be greater than or equal to NEXT_PUBLIC_LNURLP_MIN_SENDABLE.'
+  );
+}
+
+if (
+  !Number.isSafeInteger(publicEnvConfig.NEXT_PUBLIC_LNURLP_MIN_WITHDRAWABLE) ||
+  publicEnvConfig.NEXT_PUBLIC_LNURLP_MIN_WITHDRAWABLE < 1
+) {
+  throw new Error(
+    'NEXT_PUBLIC_LNURLP_MIN_WITHDRAWABLE must be a positive integer in millisatoshis.'
+  );
+}
+
+if (
+  publicEnvConfig.NEXT_PUBLIC_LNURLP_MAX_WITHDRAWABLE <
+  publicEnvConfig.NEXT_PUBLIC_LNURLP_MIN_WITHDRAWABLE
+) {
+  throw new Error(
+    'NEXT_PUBLIC_LNURLP_MAX_WITHDRAWABLE must be greater than or equal to NEXT_PUBLIC_LNURLP_MIN_WITHDRAWABLE.'
+  );
+}
+
+export default publicEnvConfig;
