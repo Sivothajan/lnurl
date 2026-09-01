@@ -98,12 +98,28 @@ function SurfaceLink({
   value: string;
 }) {
   return (
-    <div className="flex items-start gap-3 rounded-lg border bg-card p-4">
-      <Icon className="mt-0.5 size-5 shrink-0 text-primary" />
-      <div className="min-w-0 flex-1 space-y-2">
-        <p className="text-sm font-medium">{label}</p>
-        <UrlWithCopy url={value} />
+    <div className="min-w-0 rounded-lg border bg-card p-4">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-2">
+          <Icon className="size-4 shrink-0 text-primary" />
+          <p className="truncate text-sm font-medium">{label}</p>
+        </div>
+        <div className="flex shrink-0 items-center gap-1">
+          <CopyButton text={value} />
+          <a
+            href={value}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center rounded-md border bg-background p-2 text-xs font-medium hover:bg-accent hover:text-accent-foreground"
+            aria-label={`Open ${label}`}
+          >
+            <ExternalLink className="size-4" />
+          </a>
+        </div>
       </div>
+      <code className="block min-w-0 break-all rounded-md border bg-muted px-3 py-2 text-xs leading-5">
+        {value}
+      </code>
     </div>
   );
 }
@@ -240,7 +256,7 @@ export default async function HomePage() {
       </section>
 
       <section className="border-y bg-muted/20">
-        <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 py-10 sm:px-6 lg:grid-cols-[minmax(260px,340px)_minmax(0,1fr)]">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-10 sm:px-6">
           <div className="min-w-0 space-y-4">
             <div>
               <h2 className="font-heading text-2xl font-bold">Live surface</h2>
@@ -249,7 +265,7 @@ export default async function HomePage() {
                 this app.
               </p>
             </div>
-            <div className="space-y-3">
+            <div className="grid gap-3 lg:grid-cols-3">
               <SurfaceLink icon={CheckCircle2} label="Pay URL" value={payUrl} />
               <SurfaceLink icon={KeyRound} label="Login URL" value={loginUrl} />
               {withdrawUrl ? (
