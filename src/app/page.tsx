@@ -38,8 +38,8 @@ export const dynamic = 'force-dynamic';
 
 function UrlWithCopy({ url }: { url: string }) {
   return (
-    <div className="flex w-full items-center gap-2">
-      <code className="min-w-0 flex-1 truncate rounded-md border bg-muted px-3 py-2 text-xs">
+    <div className="grid w-full grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 max-[380px]:grid-cols-[minmax(0,1fr)_auto]">
+      <code className="min-w-0 break-all rounded-md border bg-muted px-3 py-2 text-xs leading-5 max-[380px]:col-span-2">
         {url}
       </code>
       <CopyButton text={url} />
@@ -70,7 +70,7 @@ function ActionLink({
   return (
     <Link
       href={href}
-      className="group rounded-lg border bg-card p-4 text-card-foreground shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground"
+      className="group min-w-0 rounded-lg border bg-card p-4 text-card-foreground shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground"
     >
       <div className="mb-3 flex items-center justify-between">
         <span className="inline-flex size-9 items-center justify-center rounded-md bg-primary text-primary-foreground">
@@ -78,7 +78,9 @@ function ActionLink({
         </span>
         <ArrowRight className="size-4 text-muted-foreground transition-transform group-hover:translate-x-1" />
       </div>
-      <h2 className="font-heading text-lg font-semibold">{title}</h2>
+      <h2 className="font-heading text-lg font-semibold leading-tight">
+        {title}
+      </h2>
       <p className="mt-1 text-sm leading-6 text-muted-foreground">
         {description}
       </p>
@@ -146,16 +148,16 @@ export default async function HomePage() {
   return (
     <main className="min-h-svh bg-background text-foreground">
       <section className="border-b bg-muted/30">
-        <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-14 sm:px-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:py-20">
-          <div className="flex flex-col justify-center">
+        <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 py-10 sm:px-6 sm:py-12 lg:grid-cols-[minmax(0,1fr)_minmax(320px,380px)] lg:gap-8 lg:py-16">
+          <div className="min-w-0 flex flex-col justify-center">
             <Badge variant="outline" className="mb-5 w-fit">
               <Zap className="mr-1.5 size-3.5" />
               Public LNURL playground
             </Badge>
-            <h1 className="max-w-3xl font-heading text-4xl font-extrabold leading-tight tracking-normal sm:text-5xl">
+            <h1 className="max-w-3xl text-balance font-heading text-3xl font-extrabold leading-tight tracking-normal sm:text-4xl lg:text-5xl">
               Pay, sign in, and test LNURL for any username.
             </h1>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">
+            <p className="mt-5 max-w-2xl text-pretty text-base leading-7 text-muted-foreground sm:text-lg">
               Try the default address, change the username in the discovery URL,
               or scan wallet-ready QR codes for LNURL-pay, LNURL-auth, and
               LNURL-withdraw.
@@ -177,9 +179,9 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <Card className="w-full">
+          <Card className="min-w-0 w-full">
             <CardHeader className="items-center text-center">
-              <CardTitle className="font-heading text-2xl">
+              <CardTitle className="break-all font-heading text-xl leading-tight sm:text-2xl">
                 {lightningAddress}
               </CardTitle>
               <CardDescription>
@@ -187,14 +189,16 @@ export default async function HomePage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-col items-center gap-4">
-              <QrCode value={payUrl} size={220} />
+              <div className="w-full max-w-[220px]">
+                <QrCode value={payUrl} size={220} />
+              </div>
               <UrlWithCopy url={payUrl} />
             </CardContent>
           </Card>
         </div>
       </section>
 
-      <section className="mx-auto grid w-full max-w-6xl gap-4 px-4 py-8 sm:px-6 md:grid-cols-3">
+      <section className="mx-auto grid w-full max-w-6xl gap-4 px-4 py-8 sm:px-6 sm:grid-cols-2 lg:grid-cols-3">
         <ActionLink
           href="/pay"
           icon={Zap}
@@ -216,8 +220,8 @@ export default async function HomePage() {
       </section>
 
       <section className="border-y bg-muted/20">
-        <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 py-10 sm:px-6 lg:grid-cols-[340px_minmax(0,1fr)]">
-          <div className="space-y-4">
+        <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 py-10 sm:px-6 lg:grid-cols-[minmax(260px,340px)_minmax(0,1fr)]">
+          <div className="min-w-0 space-y-4">
             <div>
               <h2 className="font-heading text-2xl font-bold">Live surface</h2>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -230,7 +234,7 @@ export default async function HomePage() {
                 <CheckCircle2 className="mt-0.5 size-5 text-emerald-600" />
                 <div>
                   <p className="text-sm font-medium">LNURL-pay ready</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="break-words text-sm text-muted-foreground">
                     Default discovery points to {lightningAddress}; any username
                     path is accepted.
                   </p>
@@ -248,7 +252,7 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div id="tester" className="scroll-mt-20">
+          <div id="tester" className="min-w-0 scroll-mt-20">
             <PayTester
               minMsats={publicEnvConfig.NEXT_PUBLIC_LNURLP_MIN_SENDABLE}
               maxMsats={publicEnvConfig.NEXT_PUBLIC_LNURLP_MAX_SENDABLE}

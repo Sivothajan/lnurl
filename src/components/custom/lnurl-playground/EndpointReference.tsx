@@ -26,7 +26,7 @@ function MethodContainer({
 }) {
   return (
     <div
-      className={`flex items-center gap-3 rounded-md border p-3 transition-colors ${
+      className={`flex flex-col gap-3 rounded-md border p-3 transition-colors sm:flex-row sm:items-center ${
         method === 'GET'
           ? 'border-emerald-300/60 bg-emerald-50/50 dark:border-emerald-500/30 dark:bg-emerald-950/30'
           : 'border-amber-300/60 bg-amber-50/50 dark:border-amber-500/30 dark:bg-amber-950/30'
@@ -69,7 +69,7 @@ export function EndpointReference({
                 {endpoint.description}
               </p>
             </div>
-            <div className="flex shrink-0 items-center gap-1">
+            <div className="flex w-full shrink-0 items-center justify-end gap-1 sm:w-auto">
               <CopyButton text={endpoint.url} />
               <a
                 href={endpoint.url}

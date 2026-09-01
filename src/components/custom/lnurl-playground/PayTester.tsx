@@ -151,7 +151,12 @@ export function PayTester({
           </div>
         </div>
 
-        <Button type="button" onClick={submit} disabled={loading}>
+        <Button
+          type="button"
+          onClick={submit}
+          disabled={loading}
+          className="w-full sm:w-fit"
+        >
           {loading ? (
             <Loader2 className="size-4 animate-spin" />
           ) : (
@@ -168,7 +173,7 @@ export function PayTester({
 
         {result && (
           <div className="space-y-3 rounded-md border bg-muted/40 p-4">
-            <div className="flex items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <Badge variant="outline">
                 {result.disposable ? 'Disposable' : 'Standard'} invoice
               </Badge>
@@ -181,11 +186,11 @@ export function PayTester({
               <QrCode value={result.pr} size={180} />
 
               <div className="w-full space-y-2">
-                <div className="flex items-center justify-between gap-2">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                   <Label className="text-xs text-muted-foreground">
                     BOLT11 invoice
                   </Label>
-                  <div className="flex items-center gap-1">
+                  <div className="flex flex-wrap items-center gap-1">
                     <Button
                       type="button"
                       variant="ghost"
@@ -221,8 +226,8 @@ export function PayTester({
                 <Label className="text-xs text-muted-foreground">
                   Verify URL
                 </Label>
-                <div className="flex items-center gap-2">
-                  <code className="min-w-0 flex-1 truncate rounded-md border bg-background px-3 py-2 text-xs">
+                <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 max-[380px]:grid-cols-[minmax(0,1fr)_auto]">
+                  <code className="min-w-0 break-all rounded-md border bg-background px-3 py-2 text-xs leading-5 max-[380px]:col-span-2">
                     {result.verify}
                   </code>
                   <Button
