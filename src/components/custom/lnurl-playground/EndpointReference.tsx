@@ -26,7 +26,7 @@ function MethodContainer({
 }) {
   return (
     <div
-      className={`flex flex-col gap-3 rounded-md border p-3 transition-colors sm:flex-row sm:items-center ${
+      className={`flex flex-col items-start gap-3 rounded-md border p-3 transition-colors sm:flex-row sm:items-center ${
         method === 'GET'
           ? 'border-emerald-300/60 bg-emerald-50/50 dark:border-emerald-500/30 dark:bg-emerald-950/30'
           : 'border-amber-300/60 bg-amber-50/50 dark:border-amber-500/30 dark:bg-amber-950/30'
@@ -55,7 +55,7 @@ export function EndpointReference({
           <MethodContainer key={endpoint.label} method={endpoint.method}>
             <Badge
               variant={endpoint.method === 'POST' ? 'secondary' : 'outline'}
-              className={`mt-0.5 shrink-0 ${
+              className={`mt-0.5 w-fit shrink-0 self-start ${
                 endpoint.method === 'GET'
                   ? 'border-emerald-500 text-emerald-700 dark:text-emerald-400'
                   : 'border-amber-500 text-amber-700 dark:text-amber-400'

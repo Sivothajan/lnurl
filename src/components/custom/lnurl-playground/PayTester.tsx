@@ -21,6 +21,11 @@ interface PayTesterProps {
   minMsats: number;
   maxMsats: number;
   commentsAllowed: boolean;
+  payerNameRequired: boolean;
+  payerEmailRequired: boolean;
+  payerPubkeyRequired: boolean;
+  payerIdentifierRequired: boolean;
+  defaultPayerPubkey: string;
 }
 
 interface PayResult {
@@ -36,13 +41,37 @@ function formatSats(msats: number) {
   return `${msats / 1000}`;
 }
 
+function addPayerField(
+  payerData: Record<string, string>,
+  key: string,
+  value: string,
+  required: boolean
+) {
+  const trimmed = value.trim();
+
+  if (trimmed || required) {
+    payerData[key] = trimmed;
+  }
+}
+
 export function PayTester({
   minMsats,
   maxMsats,
   commentsAllowed,
+  payerNameRequired,
+  payerEmailRequired,
+  payerPubkeyRequired,
+  payerIdentifierRequired,
+  defaultPayerPubkey,
 }: PayTesterProps) {
   const [amountSats, setAmountSats] = useState(formatSats(minMsats));
   const [comment, setComment] = useState('');
+  const [payerName, setPayerName] = useState('Test payer');
+  const [payerEmail, setPayerEmail] = useState('payer@example.com');
+  const [payerPubkey, setPayerPubkey] = useState(defaultPayerPubkey);
+  const [payerIdentifier, setPayerIdentifier] = useState(
+    'payer@lnurlp.vercel.app'
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<PayResult | null>(null);
@@ -82,6 +111,20 @@ export function PayTester({
     if (comment.trim()) {
       url.searchParams.set('comment', comment.trim());
     }
+
+    const payerData: Record<string, string> = {};
+
+    addPayerField(payerData, 'name', payerName, payerNameRequired);
+    addPayerField(payerData, 'email', payerEmail, payerEmailRequired);
+    addPayerField(payerData, 'pubkey', payerPubkey, payerPubkeyRequired);
+    addPayerField(
+      payerData,
+      'identifier',
+      payerIdentifier,
+      payerIdentifierRequired
+    );
+
+    url.searchParams.set('payerdata', JSON.stringify(payerData));
 
     setLoading(true);
 
@@ -147,6 +190,50 @@ export function PayTester({
               value={comment}
               disabled={!commentsAllowed}
               onChange={(event) => setComment(event.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="grid gap-4 rounded-md border bg-muted/30 p-4 sm:grid-cols-2">
+          <div className="space-y-2">
+            <Label htmlFor="payer-name">
+              Name{payerNameRequired ? '' : ' (optional)'}
+            </Label>
+            <Input
+              id="payer-name"
+              value={payerName}
+              onChange={(event) => setPayerName(event.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="payer-email">
+              Email{payerEmailRequired ? '' : ' (optional)'}
+            </Label>
+            <Input
+              id="payer-email"
+              type="email"
+              value={payerEmail}
+              onChange={(event) => setPayerEmail(event.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="payer-identifier">
+              Identifier{payerIdentifierRequired ? '' : ' (optional)'}
+            </Label>
+            <Input
+              id="payer-identifier"
+              value={payerIdentifier}
+              onChange={(event) => setPayerIdentifier(event.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="payer-pubkey">
+              Pubkey{payerPubkeyRequired ? '' : ' (optional)'}
+            </Label>
+            <Input
+              id="payer-pubkey"
+              value={payerPubkey}
+              onChange={(event) => setPayerPubkey(event.target.value)}
             />
           </div>
         </div>

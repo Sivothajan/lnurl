@@ -3,7 +3,7 @@ import {
   CheckCircle2,
   ExternalLink,
   KeyRound,
-  Link2,
+  ReceiptText,
   Wallet,
   Zap,
 } from 'lucide-react';
@@ -85,6 +85,26 @@ function ActionLink({
         {description}
       </p>
     </Link>
+  );
+}
+
+function SurfaceLink({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: typeof Zap;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex items-start gap-3 rounded-lg border bg-card p-4">
+      <Icon className="mt-0.5 size-5 shrink-0 text-primary" />
+      <div className="min-w-0 flex-1 space-y-2">
+        <p className="text-sm font-medium">{label}</p>
+        <UrlWithCopy url={value} />
+      </div>
+    </div>
   );
 }
 
@@ -230,25 +250,19 @@ export default async function HomePage() {
               </p>
             </div>
             <div className="space-y-3">
-              <div className="flex items-start gap-3 rounded-lg border bg-card p-4">
-                <CheckCircle2 className="mt-0.5 size-5 text-emerald-600" />
-                <div>
-                  <p className="text-sm font-medium">LNURL-pay ready</p>
-                  <p className="break-words text-sm text-muted-foreground">
-                    Default discovery points to {lightningAddress}; any username
-                    path is accepted.
-                  </p>
+              <SurfaceLink icon={CheckCircle2} label="Pay URL" value={payUrl} />
+              <SurfaceLink icon={KeyRound} label="Login URL" value={loginUrl} />
+              {withdrawUrl ? (
+                <SurfaceLink
+                  icon={ReceiptText}
+                  label="Withdraw URL"
+                  value={withdrawUrl}
+                />
+              ) : (
+                <div className="rounded-lg border bg-card p-4 text-sm text-muted-foreground">
+                  Withdraw is disabled in public configuration.
                 </div>
-              </div>
-              <div className="flex items-start gap-3 rounded-lg border bg-card p-4">
-                <Link2 className="mt-0.5 size-5 text-primary" />
-                <div className="min-w-0">
-                  <p className="text-sm font-medium">Withdraw URL</p>
-                  <p className="break-all text-sm text-muted-foreground">
-                    {withdrawUrl ?? 'Disabled in public configuration'}
-                  </p>
-                </div>
-              </div>
+              )}
             </div>
           </div>
 
@@ -258,6 +272,21 @@ export default async function HomePage() {
               maxMsats={publicEnvConfig.NEXT_PUBLIC_LNURLP_MAX_SENDABLE}
               commentsAllowed={
                 publicEnvConfig.NEXT_PUBLIC_LNURLP_IS_COMMENTS_ALLOWED
+              }
+              payerNameRequired={
+                publicEnvConfig.NEXT_PUBLIC_LNURLP_IS_NAME_MANDATORY
+              }
+              payerEmailRequired={
+                publicEnvConfig.NEXT_PUBLIC_LNURLP_IS_EMAIL_MANDATORY
+              }
+              payerPubkeyRequired={
+                publicEnvConfig.NEXT_PUBLIC_LNURLP_IS_PUBKEY_MANDATORY
+              }
+              payerIdentifierRequired={
+                publicEnvConfig.NEXT_PUBLIC_LNURLP_IS_IDENTIFIER_MANDATORY
+              }
+              defaultPayerPubkey={
+                publicEnvConfig.NEXT_PUBLIC_NOSTR_HEX_PUBLIC_KEY
               }
             />
           </div>
