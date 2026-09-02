@@ -4,6 +4,7 @@ import {
   ExternalLink,
   KeyRound,
   ReceiptText,
+  ShieldCheck,
   Wallet,
   Zap,
 } from 'lucide-react';
@@ -169,6 +170,12 @@ export default async function HomePage() {
     },
     {
       method: 'GET',
+      label: '/verify/:uuid-or-k1',
+      url: new URL('/verify/:uuid-or-k1', siteUrl).toString(),
+      description: 'Human-readable request verification.',
+    },
+    {
+      method: 'GET',
       label: '/lnurlp/service/withdraw',
       url: new URL('/lnurlp/service/withdraw', siteUrl).toString(),
       description: 'LNURL-withdraw discovery.',
@@ -234,7 +241,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto grid w-full max-w-6xl gap-4 px-4 py-8 sm:px-6 sm:grid-cols-2 lg:grid-cols-3">
+      <section className="mx-auto grid w-full max-w-6xl gap-4 px-4 py-8 sm:px-6 sm:grid-cols-2 lg:grid-cols-4">
         <ActionLink
           href="/pay"
           icon={Zap}
@@ -252,6 +259,12 @@ export default async function HomePage() {
           icon={Wallet}
           title={withdrawEnabled ? 'Withdraw' : 'Withdraw disabled'}
           description="Review the LNURL-withdraw flow and current withdrawal availability."
+        />
+        <ActionLink
+          href="/verify"
+          icon={ShieldCheck}
+          title="Verify"
+          description="Paste a pay UUID or withdraw k1 and inspect the request status visually."
         />
       </section>
 

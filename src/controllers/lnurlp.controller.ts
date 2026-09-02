@@ -488,6 +488,7 @@ export async function getLnurlpCallbackPayHandler(req: NextRequest) {
       `/lnurlp/service/pay/verify/${uuid}`,
       origin
     ).toString();
+    const visualVerifyUrl = new URL(`/verify/${uuid}`, origin).toString();
 
     const successAction =
       publicEnvConfig.NEXT_PUBLIC_LNURLP_IS_MESSAGE_IN_SUCCESS_ACTION
@@ -498,7 +499,7 @@ export async function getLnurlpCallbackPayHandler(req: NextRequest) {
         : {
             tag: 'url' as const,
             description: 'Thanks for your sats, verify your payment',
-            url: verifyUrl,
+            url: visualVerifyUrl,
           };
 
     const response: LnurlPayCallbackResponse = {
@@ -664,13 +665,10 @@ export async function getLnurlpCallbackWithdrawHandler(req: NextRequest) {
 
     await saveWithdrawRequestData(k1, invoice);
 
-    const verifyUrl = new URL(
-      `/lnurlp/service/withdraw/verify/${k1}`,
-      origin
-    ).toString();
+    const visualVerifyUrl = new URL(`/verify/${k1}`, origin).toString();
 
     try {
-      await notifyWithdrawRequest(invoice, amountMsats, k1, verifyUrl);
+      await notifyWithdrawRequest(invoice, amountMsats, k1, visualVerifyUrl);
     } catch (err) {
       console.error('Error notifying LNURL-withdraw request:', err);
     }
